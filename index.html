@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mutlu Yıllar Bababank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #121214; /* çok koyu gri */
+      --card: #191a1b; /* hafif aydınlık gri-siyah */
+      --muted: #9aa0a6; /* yazıların soft tonu */
+      --accent: #b7bdc4; /* buton/öge vurgusu (çok soft) */
+      --glass: rgba(255, 255, 255, 0.03);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, var(--bg), #0f1011);
+      color: #e9eef2;
+      font-family: 'Poppins', system-ui, Segoe UI, Arial;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .page {
+      width: 980px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 8px 12px 6px;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 0 0 4px;
+      color: #f5f7f9
+    }
+
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    /* Kutu - pasta sahnesi */
+    .scene {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.02));
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Pasta kapsayıcı */
+    #cake-wrap {
+      position: relative;
+      width: 560px;
+      max-width: 86%;
+    }
+
+    #cake-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6)
+    }
+
+    /* Mum kapsayıcı (konumlar yüzde ile) */
+    .candle {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none
+    }
+
+    /* mum gövdesi */
+    .candle .body {
+      width: 555px;
+      border-radius: 6px;
+      position: relative;
+      box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.35);
+      background: linear-gradient(180deg, #fff9e6, #fff1c0);
+    }
+
+    /* numaralı mumlar (büyük) */
+    .num-candle {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .num-base {
+      width: 46px;
+      height: 86px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 36px;
+      color: #fff;
+      background: linear-gradient(180deg, #ffd97a, #ffb84d);
+      box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.2), 0 6px 18px rgba(0, 0, 0, 0.5)
+    }
+
+    /* Şekerli çizgiler */
+    .num-base::before {
+      content: '';
+      position: absolute;
+      width: 46px;
+      height: 86px;
+      border-radius: 10px;
+      background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08) 6px, transparent 6px, transparent 12px);
+      opacity: 0.6
+    }
+
+    /* alev */
+    .flame {
+      width: 16px;
+      height: 26px;
+      border-radius: 50% 50% 40% 40%;
+      position: relative;
+      margin-top: -6px;
+      background: radial-gradient(circle at 40% 35%, #fff59a 0%, #ffd54a 30%, #ff7043 70%);
+      filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.35));
+      animation: flicker 220ms infinite
+    }
+
+    @keyframes flicker {
+      0% {
+        transform: translateY(0) scale(1)
+      }
+
+      50% {
+        transform: translateY(-2px) scale(1.06)
+      }
+
+      100% {
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    .flame.out {
+      opacity: 0;
+      transform: scale(.6);
+      transition: opacity .6s ease, transform .6s ease
+    }
+
+    /* mum sapı (fitil ucu) */
+    .wick {
+      width: 4px;
+      height: 8px;
+      background: #222;
+      margin-top: 4px;
+      border-radius: 2px
+    }
+
+    /* duman */
+    .smoke {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(200, 200, 200, 0.12);
+      animation: rise 1800ms ease-out forwards
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) scale(.6);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(-120px) scale(1.6);
+        opacity: 0
+      }
+    }
+
+    /* slideshow */
+    #slideshow {
+      display: none;
+      margin-left: 14px;
+      width: 320px;
+      max-width: 40%;
+      min-height: 260px;
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.02));
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    #slideshow .frame {
+      position: relative;
+      height: 220px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0e0f10, #141516);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    #slideshow img {
+      max-width: 100%;
+      max-height: 100%;
+      opacity: 0;
+      transition: opacity .5s ease
+    }
+
+    #slideshow img.show {
+      opacity: 1
+    }
+
+    #slide-caption {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    /* small helper */
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px
+    }
+
+    /* Responsive */
+    @media (max-width: 880px) {
+      .scene {
+        flex-direction: column;
+        align-items: center
+      }
+
+      #slideshow {
+        margin-left: 0;
+        width: 90%;
+        max-width: 540px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <h1>İyi ki Doğdun, Baba 🎉</h1>
+      <p class="lead"></p>
+    </header>
+
+    <main class="scene" aria-live="polite">
+      <div id="cake-wrap" aria-hidden="false">
+        <img id="cake-img" src="photos/pasta.png" alt="Pasta" />
+
+        </div>
+
+      <aside id="slideshow" aria-hidden="true">
+        <div class="frame">
+          <img id="slideImg" src="" alt="Fotoğraf">
+        </div>
+        <div id="slide-caption">Fotoğraflar</div>
+        <div class="note">İYİ Kİ DOĞDUN🥰</div>
+      </aside>
+    </main>
+
+    <div id="status" class="note"></div>
+  </div>
+
+  <script>
+    /* =========================
+        AYARLAR (gerekirse değiştir)
+        ========================= */
+    const NUMBER_POS = [{
+      left: 50 - 6,
+      top: 12,
+      digit: '4'
+    }, {
+      left: 50 + 6,
+      top: 12,
+      digit: '7'
+    }];
+    // Ortaya konulan genişlik-centre, soldan veya sağdan ayar için yüzde değerleri
+
+    // Alt katların küçük mum pozisyonları (yüzde değerleri cake-wrap içindeki koordinatlar)
+    const CANDLE_POS = [
+      // middle layer: 1 sol, 1 sağ
+      {
+        left: 22,
+        top: 40,
+        size: 54
+      },
+      {
+        left: 78,
+        top: 40,
+        size: 54
+      },
+      // bottom layer: 2 sol, 2 sağ
+      {
+        left: 18,
+        top: 78,
+        size: 48
+      },
+      {
+        left: 26,
+        top: 78,
+        size: 48
+      },
+      {
+        left: 74,
+        top: 78,
+        size: 48
+      },
+      {
+        left: 82,
+        top: 78,
+        size: 48
+      }
+    ];
+
+    const MAX_PHOTOS = 9; // kaç adet foto otomatik aranacak
+    const SLIDE_INTERVAL = 3000; // ms
+
+    /* =========================
+        DOM & state
+        ========================= */
+    const cakeWrap = document.getElementById('cake-wrap');
+    const status = document.getElementById('status');
+    const slideImg = document.getElementById('slideImg');
+    const slideshow = document.getElementById('slideshow');
+    const slideCaption = document.getElementById('slide-caption');
+
+    let audioCtx, analyser, dataArray, sourceNode;
+    let listening = false;
+    let blown = false;
+    let rmsAvg = 0;
+    let blowFrames = 0;
+
+    // Fotoğraflar dizisi
+    let photos = [];
+    let slideIndex = 0;
+    let slideTimer = null;
+
+    /* =========================
+        Mumları oluştur
+        ========================= */
+    function createSmallCandle(pos) {
+      const el = document.createElement('div');
+      el.className = 'candle small-candle';
+      el.style.left = pos.left + '%';
+      el.style.top = pos.top + '%';
+      el.style.setProperty('--candle-height', pos.size + 'px');
+      // gövde
+      const body = document.createElement('div');
+      body.className = 'body';
+      body.style.height = pos.size + 'px';
+      body.style.width = Math.round(pos.size / 3.5) + 'px';
+      // fitil
+      const wick = document.createElement('div');
+      wick.className = 'wick';
+      // alev
+      const flame = document.createElement('div');
+      flame.className = 'flame';
+      // yapı
+      el.appendChild(flame);
+      el.appendChild(body);
+      el.appendChild(wick);
+      cakeWrap.appendChild(el);
+      return el;
+    }
+
+    function createNumberCandle(info) {
+      const el = document.createElement('div');
+      el.className = 'num-candle';
+      el.style.left = info.left + '%';
+      el.style.top = info.top + '%';
+      const base = document.createElement('div');
+      base.className = 'num-base';
+      base.textContent = info.digit;
+      const flame = document.createElement('div');
+      flame.className = 'flame';
+      el.appendChild(flame);
+      el.appendChild(base);
+      cakeWrap.appendChild(el);
+      return el;
+    }
+
+    // Mumları oluştur
+    const createdCandles = [];
+    NUMBER_POS.forEach(p => {
+      createdCandles.push(createNumberCandle(p));
+    });
+    CANDLE_POS.forEach(p => {
+      createdCandles.push(createSmallCandle(p));
+    });
+
+    /* =========================
+        Duman oluşturma
+        ========================= */
+    function smokeAt(xPercent, yPercent) {
+      const s = document.createElement('div');
+      s.className = 'smoke';
+      s.style.left = xPercent + '%';
+      s.style.top = yPercent + '%';
+      // rasgele gecikme
+      s.style.animationDelay = (Math.random() * 300) + 'ms';
+      cakeWrap.appendChild(s);
+      setTimeout(() => {
+        try {
+          cakeWrap.removeChild(s);
+        } catch (e) {}
+      }, 2200);
+    }
+
+    /* =========================
+        Konfeti (hafif)
+        ========================= */
+    function shootConfetti(amount = 60) {
+      const colors = ['#d9e0e6', '#c2c7cc', '#8f9599', '#b7bdc4'];
+      const root = document.createElement('div');
+      root.style.position = 'fixed';
+      root.style.left = 0;
+      root.style.top = 0;
+      root.style.width = '100%';
+      root.style.height = '100%';
+      root.style.pointerEvents = 'none';
+      document.body.appendChild(root);
+      for (let i = 0; i < amount; i++) {
+        const el = document.createElement('div');
+        el.style.position = 'absolute';
+        el.style.width = '8px';
+        el.style.height = '12px';
+        el.style.borderRadius = '2px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.left = (Math.random() * 100) + '%';
+        el.style.top = (-10 - Math.random() * 10) + '%';
+        el.style.opacity = 0.95;
+        el.style.transform = `rotate(${Math.random()*360}deg)`;
+        el.style.transition = 'transform 2.2s linear, top 2.2s linear, opacity 2.2s linear';
+        root.appendChild(el);
+        setTimeout(() => {
+          el.style.top = (100 + Math.random() * 10) + '%';
+          el.style.transform = `rotate(${720 + Math.random()*720}deg)`;
+        }, 20);
+        setTimeout(() => {
+          try {
+            root.removeChild(el);
+          } catch (e) {}
+        }, 2600);
+      }
+      setTimeout(() => {
+        try {
+          document.body.removeChild(root);
+        } catch (e) {}
+      }, 3000);
+    }
+
+    /* =========================
+        Mumları söndürme
+        ========================= */
+    function extinguishAll() {
+      if (blown) return;
+      blown = true;
+      // tüm alevleri gizle
+      document.querySelectorAll('.flame').forEach(f => f.classList.add('out'));
+      // her mumun yanına 1-2 duman at
+      document.querySelectorAll('.candle, .num-candle').forEach((c, idx) => {
+        const left = parseFloat(c.style.left || '50');
+        const top = parseFloat(c.style.top || '40');
+        for (let i = 0; i < 3; i++) setTimeout(() => smokeAt(left + (Math.random() * 6 - 3), top - (Math.random() * 6)), i * 200);
+      });
+
+      // konfeti
+      shootConfetti(60);
+
+      // fotoğraf göster
+      setTimeout(() => startSlideshow(), 700);
+
+      status.textContent = 'Mumlar söndü! Fotoğraflar gösteriliyor...';
+    }
+
+    /* =========================
+        Mikrofon & Üfleme algılama
+        ========================= */
+    async function initMic() {
+      try {
+        status.textContent = 'Mikrofon izni isteniyor...';
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+        sourceNode = audioCtx.createMediaStreamSource(stream);
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 1024;
+        sourceNode.connect(analyser);
+        dataArray = new Float32Array(analyser.fftSize);
+        listening = true;
+        status.textContent = 'Mikrofon aktif. Üfle!';
+        listenLoop();
+      } catch (err) {
+        console.warn('Mikrofon izni alınamadı', err);
+        status.textContent = 'Mikrofon izni verilmedi — tarayıcı izinlerini kontrol et veya sayfayı normal tarayıcıda aç.';
+      }
+    }
+
+    function listenLoop() {
+      if (!listening || blown) return;
+      analyser.getFloatTimeDomainData(dataArray);
+      // RMS hesapla
+      let sum = 0;
+      for (let i = 0; i < dataArray.length; i++) {
+        sum += dataArray[i] * dataArray[i];
+      }
+      const rms = Math.sqrt(sum / dataArray.length);
+      // hareketli ort
+      rmsAvg = rmsAvg * 0.95 + rms * 0.05;
+      // eşik: ortalamanın katı veya mutlak min
+      const threshold = Math.max(0.015, rmsAvg * 3.2);
+      // eğer anlık değer eşikten büyükse ardışık frame sayısını artır
+      if (rms > threshold) blowFrames++;
+      else blowFrames = Math.max(0, blowFrames - 1);
+      // eğer kısa sürede 4 frame üst üste geçtiyse kabul et
+      if (blowFrames >= 4) {
+        extinguishAll();
+      }
+      requestAnimationFrame(listenLoop);
+    }
+
+    /* =========================
+        Fotoğrafları otomatik yükleme (assets/photos/1.jpg vb.)
+        ========================= */
+    function preloadPhotos() {
+      for (let i = 1; i <= MAX_PHOTOS; i++) {
+        (function(n) {
+          const jpg = `photos/${n}.jpg`;
+          const png = `photos/${n}.png`;
+          const img = new Image();
+          img.onload = () => {
+            photos.push(jpg);
+          };
+          img.onerror = () => {
+            const img2 = new Image();
+            img2.onload = () => {
+              photos.push(png);
+            };
+            img2.onerror = () => {};
+            img2.src = png;
+          };
+          img.src = jpg;
+        })(i);
+      }
+    }
+
+    function startSlideshow() {
+      if (photos.length === 0) {
+        // Foto yoksa uyar
+        slideshow.style.display = 'block';
+        slideshow.setAttribute('aria-hidden', 'false');
+        slideCaption.textContent = 'Fotoğraf bulunamadı. Lütfen proje içinde photos/ klasörüne 1.jpg, 2.jpg ... koy.';
+        return;
+      }
+      slideshow.style.display = 'block';
+      slideshow.setAttribute('aria-hidden', 'false');
+      slideIndex = 0;
+      showSlide(slideIndex);
+      if (slideTimer) clearInterval(slideTimer);
+      slideTimer = setInterval(() => {
+        slideIndex = (slideIndex + 1) % photos.length;
+        showSlide(slideIndex);
+      }, SLIDE_INTERVAL);
+    }
+
+    function showSlide(i) {
+      const url = photos[i];
+      slideImg.classList.remove('show');
+      setTimeout(() => {
+        slideImg.src = url;
+        slideImg.onload = () => slideImg.classList.add('show');
+      }, 120);
+      slideCaption.textContent = `${i+1} / ${photos.length}`;
+    }
+
+    /* =========================
+        Başlat
+        ========================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fotoğrafları önceden aramaya başla
+      preloadPhotos();
+      // Mikrofonu otomatik iste
+      initMic();
+
+      // Adaptif: eğer kullanıcı küçük bir test yapmak isterse (ör. masaüstünde) boş bir tıklama ile sayfa etkileşimi sağlanır ve autoplay engelleri kalkabilir
+      document.body.addEventListener('click', () => {
+        if (!listening && !blown) initMic();
+      }, {
+        once: true
+      });
+
+      // Eğer geliştirmek istersen: NUMBER_POS ve CANDLE_POS dizilerini yukarıda değiştirerek mumların tam konumlarını hassas ayarlayabilirsin.
+    });
+  </script>
+</body>
+</html>
